@@ -1,0 +1,10 @@
+AHR	AHR_1.motif	Direct
+AIRE	AIRE_1.motif	Direct
+ALX1	ALX1_2.motif	Direct
+ALX3	ALX3_1.motif	Direct
+ALX3	ALX3_2.motif	Direct
+ALX4	ALX4_1.motif	Direct
+AR	AR_1.motif	Direct
+ARGFX	CRX_1.motif	Inferred
+ARID1A	ARID3A_2.motif	Inferred
+ARID1B	ARID3A_2.motif	Inferred
