@@ -28,7 +28,7 @@ The pipeline build a dataset of differentially methylated regions in the human g
 
 ## usege
 
-```./pipeline.sh -d {reference directory} {reference cell name} {methylkit input directory} {transcript input directory}
+```./pipeline.sh -d {reference directory} {reference cell name} {methylkit input directory} {transcript input directory}```
 
 input directory contains methylkit input data
 
