@@ -65,8 +65,10 @@ The files are tab-delimited texts with the following columns.
 
 ## for test run
 
-```cd testdata/work
-../../src/pipeline.sh -d ../db celltype1 ../input/methyl ../input/transcript/```
+~~~~
+cd testdata/work
+../../src/pipeline.sh -d ../db celltype1 ../input/methyl ../input/transcript/
+~~~~
 
 
 ## Datasets used in the report
