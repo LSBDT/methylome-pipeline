@@ -16,9 +16,9 @@ The pipeline build a dataset of differentially methylated regions in the human g
 - R library genomation
 
 
-### files
+### reference files
 
-- genome reference hg19.fa
+- genome reference hg19.fa, hg19.fa.fai
 - chrom.sizes file
 - refGene bed file
 - CpG island bed file
@@ -28,7 +28,7 @@ The pipeline build a dataset of differentially methylated regions in the human g
 
 ## usege
 
-```./pipeline.sh {methylkit input directory} {transcript input directory}```
+```./pipeline.sh -d {reference directory} {reference cell name} {methylkit input directory} {transcript input directory}
 
 input directory contains methylkit input data
 
@@ -36,15 +36,37 @@ input directory contains methylkit input data
 
 ```{methylkit input directory}/{celltype}/{samplename}.gz```
 
+The files are gzipped tab-delimited texts with the following columns.
+
+- column1: chr
+- column2: start
+- column3: end
+- column4: total coverage
+- column5: methyl coverage
+- column6: methyl %
+
 ```{transcript input directory}/{celltype}/{samplename}.tab```
 
-The '.tab' file is a tab-delimited text whose columns are
+The files are tab-delimited texts with the following columns.
+
 - column1: genename
 - column2: fpkm
 
+### output files
+
+```{workdir}/centrimo/summary/{reference_cell}.{meth,demeth}.ave.fpkm.motif.pval_peak_cons.tab```
+
+- meth: methylated in reference_cell
+- demeth: demethylated in reference_cell
+
+- rows: motifs
+- columns: p-value, C-value, concentration, fpkm
+
+
 ## for test run
 
-```./pipeline.sh testdata/input/methyl testdata/input/transcript```
+```cd testdata/work
+../../src/pipeline.sh -d ../db celltype1 ../input/methyl ../input/transcript/```
 
 
 ## Datasets used in the report
@@ -52,5 +74,4 @@ The '.tab' file is a tab-delimited text whose columns are
 The input files to create the original dataset used in the report by Miyajima and Noguchi et al. are available at the following site:
 
 https://genomec.gsc.riken.jp/gerg/owncloud/index.php/s/o8N21uW976my2t8
-
 

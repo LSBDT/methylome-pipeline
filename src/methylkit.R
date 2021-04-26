@@ -1,5 +1,5 @@
-suppressMessages(library (methylKit))
-suppressMessages(library (graphics))
+library (methylKit)
+library (graphics)
 args <- commandArgs(trailingOnly = T)
 
 wkdir <- args[1]

@@ -1,17 +1,15 @@
 #!/bin/bash
 #######################################################################
-wkdir=$1
-th=$2
-inputdir=$3
-genelist=${wkdir}/image/gene.list
-outdir=${wkdir}/transcript/summary
+inputdir=$1
+genelist=image/gene.list
+outdir=transcript
 #######################################################################
-mkdir -p ${wkdir} $outdir
-cd ${wkdir}
+mkdir -p $outdir
 
 fn(){
     count=2
-    for f in ${wkdir}/$dd/*.tab ;do
+    for f in ${inputdir}/$dd/*.tab ;do
+        [[ -f $f ]] || { echo "$f not exist"; exit; }
         if [[ $count == 2 ]];then
             join -t$'\t' -a 1 $genelist $f|awk 'OFS="\t"{if($'$count'==""){print $1,"0"}else{print $0}}' > tmp2
         else
@@ -21,15 +19,15 @@ fn(){
         ((count+=1))
     done
     cat tmp1 | awk 'BEGIN{OFS="\t"}{
-    ave=0
-    for(i=2;i<=NF;i++){
-      ave += $i
-    }
-    print $1,ave/(NF-1)}' > $outdir/$dd.ave.tab
+        ave=0
+        for(i=2;i<=NF;i++){
+          ave += $i
+        }
+        print $1,ave/(NF-1)}' > $outdir/$dd.ave.tab
     rm tmp1
 }
 
-for d in ${inptdir}/* ;do
+for d in `ls -d ${inputdir}/*` ;do
   dd=`echo ${d##*/}`
   fn
 done
@@ -50,8 +48,9 @@ count=1
 for f in $outdir/*.ave.tab ;do
     ff=`echo ${f##*/}|sed 's/\.ave\.tab$//'`
     fn2
-    ((count+=1)
+    ((count+=1))
 done
 cat header1 tmp3 > $outdir/ave.fpkm.tab
 rm header1 tmp[3]
 
+exit 0

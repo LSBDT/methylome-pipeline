@@ -1,21 +1,18 @@
-#!/bin/sh
-#run methylKit
+#!/bin/bash
 #################################################
-wkdir=$1
-cell1=$2   #reference celltype
-cell2=$3   #比較対象のサンプル
-interval=$4
-q=$5
-diff=$6
-locount=$7
-rscript=$8
-refgene=$9
-refcpg=${10}
+cell1=$1   #reference celltype
+cell2=$2   #sample
+interval=$3
+q=$4
+diff=$5
+locount=$6
+rscript=$7
+refgene=$8
+refcpg=$9
 #################################################
-outdir=${wkdir}/methylkit
-inputdir=${wkdir}/average/sum
-cd ${wkdir}
-mkdir -p ${outdir} ${outdir}/QC $outdir/Rdata
+outdir=methylkit
+inputdir=average
+mkdir -p ${outdir} ${outdir}/QC
 
 sample1=${inputdir}/$cell1.txt.gz
 sample2=${inputdir}/$cell2.txt.gz
@@ -23,6 +20,9 @@ out=${cell1}....${cell2}
 
 zcat ${sample1} > ${sample1}.${cell2}.txt
 zcat ${sample2} > ${sample2}.${cell1}.txt
-R --slave --args $wkdir $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $refgene $refcpg < $rscript 1>&2
+echo " --vanilla --args $PWD $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $refgene $refcpg < $rscript 1>&2"
+R --vanilla --args $PWD $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $refgene $refcpg < $rscript 1>&2
 gzip -f ${outdir}/${out}.txt
 rm ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt
+
+exit 0

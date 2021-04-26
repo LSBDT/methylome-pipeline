@@ -1,0 +1,24 @@
+# 1-order Markov frequencies from file centrimo/celltype1....celltype2/celltype1_meth.fasta
+# seqs: 2843    min: 2199    max: 2199    avg: 2199.0    sum: 6251757    alph: DNA
+# order 0
+A 2.604e-01
+C 2.396e-01
+G 2.396e-01
+T 2.604e-01
+# order 1
+AA 7.763e-02
+AC 5.113e-02
+AG 7.545e-02
+AT 5.622e-02
+CA 7.619e-02
+CC 7.028e-02
+CG 1.766e-02
+CT 7.545e-02
+GA 6.063e-02
+GC 5.753e-02
+GG 7.028e-02
+GT 5.113e-02
+TA 4.599e-02
+TC 6.063e-02
+TG 7.619e-02
+TT 7.763e-02
