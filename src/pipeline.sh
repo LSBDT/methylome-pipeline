@@ -11,20 +11,24 @@ srcdir=$(cd $(dirname $(readlink -f $0 || echo $0));pwd -P)
 usage(){
     cat <<EOF
 Usage:
-    $(basename ${0}) [<options>] [-r refGene bed file] [-c CpG bed file] [methylation data directory] [transcript data directory]
+    $(basename ${0}) [<options>] [-d reference data directory] [-v genome version (hg19/hg38)] [methylation data directory] [transcript data directory]
+    or
+    $(basename ${0}) [<options>] [-r refGene bed file] [-p CpG bed file] [-g genome fasta file] [-c genome chrom sizes file]
+        [-m motif list file] [-n genename motif list file] [-s motif sequence file] [-v genome version (hg19/hg38)] [methylation data directory] [transcript data directory]
 
 Options:
 
     -w    working directory [def. current directory]
-    -b    reference data directory
+    -d    reference data directory
     -i    interval(bp) [def. 200]
     -q    q-value threshold [def. 0.0001]
-    -d    differential methylation % threshold [def. 50]
+    -t    differential methylation % threshold [def. 50]
     -l    methylkit count threshold [def. 100]
     -r    refGene bed file
     -p    CpG bed file
     -g    genome fasta file
     -c    genome chrom sizes file
+    -v    genome version (hg19/hg38)
     -m    motif list file
     -n    genename motif list file
     -s    motif sequence file
@@ -36,18 +40,19 @@ EOF
 [[ $# = 0 ]] && usage
 
 export LC_ALL=C
-while getopts w:d:i:q:d:l:r:p:g:c:m:n:s:h OPT ;do
+while getopts w:d:i:q:t:l:r:p:g:c:v:m:n:s:h OPT ;do
   case ${OPT} in
     w) wkdir=${OPTARG} ;;
     d) datadir=${OPTARG} ;;
     i) interval=${OPTARG} ;;
     q) q-value=${OPTARG} ;;
-    d) diff=${OPTARG} ;;
+    t) diff=${OPTARG} ;;
     l) locount=${OPTARG} ;;
     r) refgene=${OPTARG} ;;
     p) refcpg=${OPTARG} ;;
     g) genome=${OPTARG} ;;
     c) chrom_sizes=${OPTARG} ;;
+    v) genomever=${OPTARG} ;;
     m) motif_list=${OPTARG} ;;
     n) gene_motif=${OPTARG} ;;
     s) motifseq=${OPTARG} ;;
@@ -79,12 +84,13 @@ check_dir ${transcriptdir} "transcript data directory"
 [[ -z ${q_value} ]] && q_value=0.0001
 [[ -z ${diff} ]] && diff=50
 [[ -z ${locount} ]] && locount=100
+[[ -z ${genomever} ]] && genomever=hg19
 
 if [[ -n ${datadir} ]];then
-    refgene=${datadir}/hg19.refGene.bed
-    refcpg=${datadir}/cpgi.hg19.bed
-    genome=${datadir}/hg19.fa.gz
-    chrom_sizes=${datadir}/hg19.chrom.sizes
+    refgene=${datadir}/${genomever}.refGene.bed
+    refcpg=${datadir}/cpgi.${genomever}.bed
+    genome=${datadir}/${genomever}.fa.gz
+    chrom_sizes=${datadir}/${genomever}.chrom.sizes
     motif_list=${datadir}/image.meme
     gene_motif=${datadir}/Genename_Motif.txt
     motifseq=${datadir}/motif.seq
@@ -97,7 +103,7 @@ else
     check_file ${gene_motif}  "[-n genename motif list file]"
     check_file ${motifseq}    "[-s motif sequence file]"
 fi
-#test(){
+
 echo "methylation data prep"
 for dir in `ls -d ${inputdir}/*` ;do
     [[ -d ${dir} ]] || { echo "${inputdir}/* dose not exist." 1>&2; exit 1; }
@@ -109,12 +115,12 @@ for file in average/*.txt.gz ;do
     if [[ ! ${file} = average/${refcell}.txt.gz ]];then
         cell2=`echo ${file##*/}|sed 's/\.txt\.gz//'`
         echo "run methylKit ${refcell} ${cell2}"
-        bash ${srcdir}/methylkit.sh ${refcell} ${cell2} ${interval} ${q_value} ${diff} ${locount} ${srcdir}/methylkit.R ${refgene} ${refcpg}
+        bash ${srcdir}/methylkit.sh ${refcell} ${cell2} ${interval} ${q_value} ${diff} ${locount} ${srcdir}/methylkit.R ${genomever} ${refgene} ${refcpg}
         echo "run centrimo ${refcell} ${cell2}"
         bash ${srcdir}/centrimo.sh ${refcell} ${cell2} ${genome} ${chrom_sizes} ${motif_list}
     fi
 done
-#}
+
 echo "centrimo summary"
 bash ${srcdir}/centrimo.summary.sh ${refcell} ${gene_motif} ${motifseq} -230.259 1.2
 [[ $? = 0 ]] || exit 1

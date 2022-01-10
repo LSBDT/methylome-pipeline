@@ -15,9 +15,9 @@ id2 <- args[10]
 locount <- as.numeric(args[11])
 
 setwd(wkdir)
-genome <- "hg19"
-refgene <- args[12]
-refcpg <- args[13]
+genome <- args[12]
+refgene <- args[13]
+refcpg <- args[14]
 
 fn <- function(input_a1,input_b1,out,length){
     pdf(paste(dir,"/QC/QC_", out,"_",length,".pdf", sep=""))

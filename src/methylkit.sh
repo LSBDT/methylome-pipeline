@@ -7,8 +7,9 @@ q=$4
 diff=$5
 locount=$6
 rscript=$7
-refgene=$8
-refcpg=$9
+genomever=$8
+refgene=$9
+refcpg=$10
 #################################################
 outdir=methylkit
 inputdir=average
@@ -20,8 +21,8 @@ out=${cell1}....${cell2}
 
 zcat ${sample1} > ${sample1}.${cell2}.txt
 zcat ${sample2} > ${sample2}.${cell1}.txt
-echo " --vanilla --args $PWD $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $refgene $refcpg < $rscript 1>&2"
-R --vanilla --args $PWD $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $refgene $refcpg < $rscript 1>&2
+echo " --vanilla --args $PWD $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $genomever $refgene $refcpg < $rscript 1>&2"
+R --vanilla --args $PWD $interval $outdir $diff $q ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt $out ${cell1} ${cell2} $locount $genomever $refgene $refcpg < $rscript 1>&2
 gzip -f ${outdir}/${out}.txt
 rm ${sample1}.${cell2}.txt ${sample2}.${cell1}.txt
 
